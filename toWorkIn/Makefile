@@ -3,13 +3,17 @@ PUSH_DIR=../toPushIn/files
 KEY=../key
 
 init:
-	make -f ../toPushIn/Makefile init
+	make -C ../toPushIn init
+
+push-no-check:
+	../pushScript.sh $(PULL_DIR) $(PUSH_DIR) $(KEY)
+	make -C ../toPushIn push
 
 push:
-	make -f ../toPushIn/Makefile pull
+	make -C ../toPushIn pull
 	../pushScript.sh $(PULL_DIR) $(PUSH_DIR) $(KEY)
-	make -f ../toPushIn/Makefile push
+	make -C ../toPushIn push
 
 pull:
-	make -f ../toPushIn/Makefile pull
+	make -C ../toPushIn pull
 	../pullScript.sh $(PULL_DIR) $(PUSH_DIR) $(KEY)

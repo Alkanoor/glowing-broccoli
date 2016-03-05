@@ -13,7 +13,7 @@ You want to protect dir X for beeing seen.
 * Copy the makefile in toPushIn in the child folder you created (which contain encrypted files).
 * Create a remote repository.
 * Modify makefile in created child folder this way.
-* Type make init in your main folder, then you could type make push if you want to update the folder remotely or make pull if you want to update it locally.
+* Type make init in your main folder, then you could type make push (or make push-no-check => if you want to modify the makefile) if you want to update the folder remotely or make pull if you want to update it locally.
 
 ## Warnings
 
