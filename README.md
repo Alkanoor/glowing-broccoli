@@ -12,5 +12,10 @@ You want to protect dir X for beeing seen.
 * Copy the pullScript.sh, the pushScript.sh in this folder.
 * Copy the makefile in toPushIn in the child folder you created (which contain encrypted files).
 * Create a remote repository.
-* Modify first makefile in this way.
+* Modify makefile in created child folder this way.
 * Type make init in your main folder, then you could type make push if you want to update the folder remotely or make pull if you want to update it locally.
+
+## Warnings
+
+* Don't lose or modify the key if you want to be able to recover previous commits made.
+* Keep the key secret or all that is useless.
