@@ -1,7 +1,3 @@
-#On remplace tous les fichiers de dates differentes par rapport au fichiers pulled
-#argv[1] = dest_dir
-#argv[2] = base_dir
-
 import re
 import sys
 import hashlib
@@ -30,28 +26,20 @@ extend_dir(dirs,files,('.',src))
 for i in range(len(dirs)):
     extend_dir(dirs,files,dirs[i])
 
-# print(dirs)
-# print(files)
-
 cur_encoded = list_target_files(dst)
 dict_cur_encoded = {}
 dict_to_delete_if_replace = {}
 
 for u,v,w,x in cur_encoded:
     if dict_to_delete_if_replace.get(u) is not None:
+        print("Removing file "+w+" because corresponding unciphered file is already here")
         os.remove(w)
     else:
         dict_cur_encoded[u] = (v,x)
         dict_to_delete_if_replace[u] = w
-print(cur_encoded)
-print(files)
-print(dict_cur_encoded)
-print(dict_to_delete_if_replace)
 
-key = open('key','r').read()
-h = hashlib.sha256()
-h.update(key)
-key = h.digest()[:AES.block_size]
+key = craft_key('key')
+
 for f in files:
     try:
         raw = full_path(f)

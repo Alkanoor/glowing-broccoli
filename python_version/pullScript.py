@@ -1,7 +1,3 @@
-#On remplace tous les fichiers de dates differentes par rapport au fichiers pulled
-#argv[1] = dest_dir
-#argv[2] = base_dir
-
 import re
 import sys
 import base64
@@ -15,60 +11,49 @@ if len(sys.argv)<2:
     print("[-] Usage "+sys.argv[0]+" <source dir>")
 
 src = sys.argv[1]
+files = list_target_files(src)
 
-print(list_target_files(src))
-exit()
+key = craft_key('key')
 
-dirs = []
-files = []
-
-extend_dir(dirs,files,('.',src))
-
-for i in range(len(dirs)):
-    extend_dir(dirs,files,dirs[i])
-
-print(dirs)
-print(files)
-
-key = open('key','r').readlines()[0].split('\n')[0]
-for f in files:
+for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
     try:
-        enc = base64.b64decode(full_path(f))
-        iv = enc[:16]
-        cipher = AES.new(key, AES.MODE_CTR, iv)
-        cur_file = unpad(cipher.decrypt(enc[16:]))
+        enc = base64.b64decode(open(ciphered,'rb').read())
+        iv = enc[2*AES.block_size:3*AES.block_size]
+        ctr = enc[3*AES.block_size:4*AES.block_size]
+        counter.reset_counter(ctr)
+        cipher = AES.new(key, AES.MODE_CTR, iv, get_current_counter)
+        file_content = cipher.decrypt(enc[5*AES.block_size:])
     except Exception as e:
         print("[-] Error during AES deciphering, please verify the key ("+str(e.args[0])+")")
         print("[-] Aborting ...")
         exit()
-    if isfile(cur_file):
-        cur_date = 1 #get date(cur_file)
-        pulled_date = 1 #get date(f)
+
+    existing = True
+    if isfile(target):
         replace = False
-        if cur_date != f:
-            if cur_date > pulled_date:
-                print("[+] Warning, current date is superior as pulled one, are you sure that you want replace the file ? [N/y]")
+        if last_modif_target != last_modif_in_ciphered:
+            if last_modif_target > last_modif_in_ciphered:
+                print("[+] Warning, current date is superior as pulled one, are you sure you want to replace the file ? (and possibly lose data) [N/y]")
                 i = raw_input()
                 if i == 'y':
                     replace = True
             else:
                 replace = True
+    else:
+        tmp = target.split('/')
+        os.makedirs('/'.join(tmp[:-1]))
+        replace = True
+        existing = False
+
     if replace:
-        content_file = open(full_path(f),'rb').read()
         try:
-            enc = base64.b64decode(content_file)
-            iv = enc[:16]
-            cipher = AES.new(key, AES.MODE_CTR, iv)
-            content = unpad(cipher.decrypt(enc[16:]))
+            g = open(target,'wb+')
+            g.write(file_content)
+            if existing:
+                print("[+] File "+target+" replaced")
+            else:
+                print("[+] File "+target+" created")
         except Exception as e:
-            print("[-] Error during AES deciphering of file "+full_path(f)+", please verify the key ("+str(e.args[0])+")")
-            print("[-] Aborting ...")
-            exit()
-        try:
-            g = open(cur_file,'wb+')
-            g.write(content)
-            print("[+] File replaced")
-        except Exception as e:
-            print("[-] Error during file replacement of "+cur_file+" : "+str(e.args[0]))
+            print("[-] Error during file replacement of "+target+" : "+str(e.args[0]))
             print("[-] Aborting ...")
             exit()

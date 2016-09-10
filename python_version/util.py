@@ -1,7 +1,9 @@
 import re
 import base64
+import hashlib
 from os import listdir
 from os.path import isdir, isfile, join
+from Crypto.Cipher import AES
 
 def base64_no_slash_encode(m):
     return base64.b64encode(m).replace('/',':')
@@ -53,3 +55,10 @@ counter = Counter()
 
 def get_current_counter():
     return counter.current_val()
+
+def craft_key(filename):
+    key = open(filename,'rb').read()
+    h = hashlib.sha256()
+    h.update(key)
+    key = h.digest()[:AES.block_size]
+    return key
