@@ -33,15 +33,22 @@ for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
         replace = False
         if last_modif_target != last_modif_in_ciphered:
             if last_modif_target > last_modif_in_ciphered:
-                print("[+] Warning, current date is superior as pulled one, are you sure you want to replace the file ? (and possibly lose data) [N/y]")
+                print("[+] Warning, current date of "+target+" is superior as pulled one, are you sure you want to replace the file ? (and possibly lose data) [N/y]")
                 i = raw_input()
                 if i == 'y':
                     replace = True
             else:
                 replace = True
     else:
-        tmp = target.split('/')
-        os.makedirs('/'.join(tmp[:-1]))
+        split_target = target.split('/')
+        print(split_target)
+        tmp = split_target[0]
+        i = 1
+        while isdir(tmp) and i+1<len(split_target):
+            tmp += "/"+split_target[i]
+            i += 1
+        if not isdir(tmp):
+            os.makedirs('/'.join(split_target[:-1]))
         replace = True
         existing = False
 

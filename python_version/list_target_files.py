@@ -14,8 +14,10 @@ def list_target_files(target_dir):
 
     extend_dir(dirs,files,('.',target_dir))
 
-    for i in range(len(dirs)):
+    i = 0
+    while i<len(dirs):
         extend_dir(dirs,files,dirs[i])
+        i += 1
 
     key = open('key','r').read()
     h = hashlib.sha256()

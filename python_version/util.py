@@ -19,7 +19,6 @@ def extend_dir(dirs,files,cur):
     if isfile(join(full_path(cur), '.ignore')):
         ignore_file = open(join(full_path(cur), '.ignore'), 'r')
         to_ignore = [l.split('\n')[0] for l in ignore_file.readlines()]
-        print(to_ignore)
     tmp11 = [(f,full_path(cur)) for f in listdir(full_path(cur)) if isfile(join(full_path(cur), f))]
     tmp21 = [(f,full_path(cur)) for f in listdir(full_path(cur)) if isdir(join(full_path(cur), f))]
     if len(to_ignore)>0:
@@ -36,6 +35,8 @@ def extend_dir(dirs,files,cur):
             bad = False
             for r in to_ignore:
                 if re.match(r,t[0]):
+                    print(t)
+                    print(r)
                     bad = True
             if not bad:
                 tmp22.append(t)

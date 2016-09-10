@@ -23,8 +23,10 @@ files = []
 
 extend_dir(dirs,files,('.',src))
 
-for i in range(len(dirs)):
+i = 0
+while i<len(dirs):
     extend_dir(dirs,files,dirs[i])
+    i += 1
 
 cur_encoded = list_target_files(dst)
 dict_cur_encoded = {}
