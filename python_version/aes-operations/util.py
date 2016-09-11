@@ -35,8 +35,6 @@ def extend_dir(dirs,files,cur):
             bad = False
             for r in to_ignore:
                 if re.match(r,t[0]):
-                    print(t)
-                    print(r)
                     bad = True
             if not bad:
                 tmp22.append(t)
