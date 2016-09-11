@@ -5,6 +5,9 @@ KEY=../aes-operations/key
 init:
 	make -C ../toPushIn init
 
+init-existing:
+	make -C ../toPushIn init-existing
+
 push-no-check:
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR) $(KEY)
 	make -C ../toPushIn push
