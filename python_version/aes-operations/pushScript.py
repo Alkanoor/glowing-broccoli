@@ -9,14 +9,18 @@ from list_target_files import *
 
 
 force_replace = False
+delete_useless = False
 
-if len(sys.argv)<3:
-    print("[-] Usage "+sys.argv[0]+" <source dir> <destination dir> [force replacement]")
-elif len(sys.argv)>3:
-    force_replace = (sys.argv[3]=='1')
+if len(sys.argv)<4:
+    print("[-] Usage "+sys.argv[0]+" <source dir> <destination dir> <key filename> [delete useless files] [force replacement]")
+elif len(sys.argv)>4:
+    delete_useless = (sys.argv[4]=='1')
+    if len(sys.argv)>5:
+        force_replace = (sys.argv[5]=='1')
 
 src = sys.argv[1]
 dst = sys.argv[2]
+key = craft_key(sys.argv[3])
 
 dirs = []
 files = []
@@ -28,9 +32,10 @@ while i<len(dirs):
     extend_dir(dirs,files,dirs[i])
     i += 1
 
-cur_encoded = list_target_files(dst)
+cur_encoded = list_target_files(dst,key)
 dict_cur_encoded = {}
 dict_to_delete_if_replace = {}
+done = {}
 
 for u,v,w,x in cur_encoded:
     if dict_to_delete_if_replace.get(u) is not None:
@@ -39,8 +44,7 @@ for u,v,w,x in cur_encoded:
     else:
         dict_cur_encoded[u] = (v,x)
         dict_to_delete_if_replace[u] = w
-
-key = craft_key('key')
+        done[u] = False
 
 for f in files:
     try:
@@ -66,6 +70,7 @@ for f in files:
 
     existing = True
     if dict_cur_encoded.get(full_path(f)) is not None:
+        done[full_path(f)] = True
         cur_date,pushed_date = dict_cur_encoded[full_path(f)]
         replace = False
         if not force_replace:
@@ -112,3 +117,9 @@ for f in files:
             print("[-] Error during file creation of "+dst+"/"+enc+" : "+str(e.args[0])+" for original file "+full_path(f))
             print("[-] Aborting ...")
             exit()
+
+if delete_useless:
+    for u in done:
+        if not done[u]:
+            print("Ciphered file corresponding to previous "+u+" deleted")
+            os.remove(dict_to_delete_if_replace[u])

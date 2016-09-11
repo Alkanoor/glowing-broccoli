@@ -7,13 +7,13 @@ from Crypto.Cipher import AES
 from list_target_files import *
 
 
-if len(sys.argv)<2:
-    print("[-] Usage "+sys.argv[0]+" <source dir>")
+if len(sys.argv)<3:
+    print("[-] Usage "+sys.argv[0]+" <source dir> <key filename>")
 
 src = sys.argv[1]
-files = list_target_files(src)
+key = craft_key(sys.argv[2])
 
-key = craft_key('key')
+files = list_target_files(src,key)
 
 for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
     try:

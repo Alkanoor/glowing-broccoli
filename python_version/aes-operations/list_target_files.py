@@ -7,7 +7,7 @@ from Crypto.Cipher import AES
 from os.path import isfile
 
 
-def list_target_files(target_dir):
+def list_target_files(target_dir,key):
     ret = []
     dirs = []
     files = []
@@ -19,10 +19,6 @@ def list_target_files(target_dir):
         extend_dir(dirs,files,dirs[i])
         i += 1
 
-    key = open('key','r').read()
-    h = hashlib.sha256()
-    h.update(key)
-    key = h.digest()[:AES.block_size]
     for f in files:
         enc_content = open(full_path(f),'rb').read()
         try:
