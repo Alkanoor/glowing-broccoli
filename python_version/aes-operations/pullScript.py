@@ -41,16 +41,24 @@ for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
                 replace = True
     else:
         split_target = target.split('/')
-        print(split_target)
         tmp = split_target[0]
         i = 1
         while isdir(tmp) and i+1<len(split_target):
             tmp += "/"+split_target[i]
             i += 1
-        if not isdir(tmp):
-            os.makedirs('/'.join(split_target[:-1]))
         replace = True
         existing = False
+        if not isdir(tmp):
+            try:
+                os.makedirs('/'.join(split_target[:-1]))
+            except:
+                print("[!] Seems there is a problem with "+ciphered)
+                print("[?] Do you want to delete the file ? (be sure of what you're doing)")
+                i = raw_input()
+                if i == 'y':
+                    os.remove(ciphered)
+                    replace = False
+                    print("[-] File "+ciphered+" deleted")
 
     if replace:
         try:
