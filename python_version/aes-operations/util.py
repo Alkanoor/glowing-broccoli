@@ -6,10 +6,10 @@ from os.path import isdir, isfile, join
 from Crypto.Cipher import AES
 
 def base64_no_slash_encode(m):
-    return base64.b64encode(m).replace('/',':')
+    return base64.b64encode(m).replace('/','_').replace('+','-')
 
 def base64_no_slash_decode(m):
-    return base64.b64decode(m.replace(':','/'))
+    return base64.b64decode(m.replace('_','/').replace('-','+'))
 
 def full_path(t):
     return t[1]+'/'+t[0]
