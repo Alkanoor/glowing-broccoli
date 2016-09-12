@@ -68,6 +68,8 @@ for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
                 print("[+] File "+target+" replaced")
             else:
                 print("[+] File "+target+" created")
+            g.close()
+            os.utime(target, (last_modif_in_ciphered, last_modif_in_ciphered))
         except Exception as e:
             print("[-] Error during file replacement of "+target+" : "+str(e.args[0]))
             print("[-] Aborting ...")
