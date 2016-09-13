@@ -23,13 +23,11 @@ def list_target_files(target_dir,key):
         enc_content = open(full_path(f),'rb').read()
         try:
             enc = base64.b64decode(enc_content)
-            iv1 = enc[:AES.block_size]
-            ctr1 = enc[AES.block_size:2*AES.block_size]
-            iv2 = enc[2*AES.block_size:3*AES.block_size]
-            ctr2 = enc[3*AES.block_size:4*AES.block_size]
-            read_date_enc = enc[4*AES.block_size:5*AES.block_size]
+            ctr1 = enc[:AES.block_size]
+            ctr2 = enc[AES.block_size:2*AES.block_size]
+            read_date_enc = enc[2*AES.block_size:3*AES.block_size]
             counter.reset_counter(ctr1)
-            cipher = AES.new(key, AES.MODE_CTR, iv1, get_current_counter)
+            cipher = AES.new(key, AES.MODE_CTR, counter=get_current_counter)
             filename = cipher.decrypt(base64_no_slash_decode(f[0]))
             read_date = int(binascii.hexlify(cipher.decrypt(read_date_enc)),16)
         except Exception as e:

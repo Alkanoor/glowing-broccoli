@@ -49,11 +49,10 @@ for u,v,w,x in cur_encoded:
 for f in files:
     try:
         raw = full_path(f)
-        iv = Random.new().read(AES.block_size)
         ctr = Random.new().read(AES.block_size)
-        iv_ctr_name_enc = iv+ctr
+        ctr_name_enc = ctr
         counter.reset_counter(ctr)
-        cipher = AES.new(key, AES.MODE_CTR, iv, get_current_counter)
+        cipher = AES.new(key, AES.MODE_CTR, counter=get_current_counter)
 
         enc = base64_no_slash_encode(cipher.encrypt(raw))
 
@@ -96,17 +95,16 @@ for f in files:
             exit()
         try:
             raw = content_file
-            iv = Random.new().read(AES.block_size)
             ctr = Random.new().read(AES.block_size)
             counter.reset_counter(ctr)
-            cipher = AES.new(key, AES.MODE_CTR, iv, get_current_counter)
-            enc_content = iv+ctr+date_enc+cipher.encrypt(raw)
+            cipher = AES.new(key, AES.MODE_CTR, counter=get_current_counter)
+            enc_content = ctr+date_enc+cipher.encrypt(raw)
         except Exception as e:
             print("[-] Error during AES ciphering of file "+full_path(f)+" : "+str(e.args[0]))
             print("[-] Aborting ...")
             exit()
         try:
-            g.write(base64.b64encode(iv_ctr_name_enc+enc_content))
+            g.write(base64.b64encode(ctr_name_enc+enc_content))
             g.close()
             if existing:
                 os.remove(dict_to_delete_if_replace[full_path(f)])

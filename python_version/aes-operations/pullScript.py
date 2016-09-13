@@ -18,11 +18,10 @@ files = list_target_files(src,key)
 for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
     try:
         enc = base64.b64decode(open(ciphered,'rb').read())
-        iv = enc[2*AES.block_size:3*AES.block_size]
-        ctr = enc[3*AES.block_size:4*AES.block_size]
+        ctr = enc[AES.block_size:2*AES.block_size]
         counter.reset_counter(ctr)
-        cipher = AES.new(key, AES.MODE_CTR, iv, get_current_counter)
-        file_content = cipher.decrypt(enc[5*AES.block_size:])
+        cipher = AES.new(key, AES.MODE_CTR, counter=get_current_counter)
+        file_content = cipher.decrypt(enc[3*AES.block_size:])
     except Exception as e:
         print("[-] Error during AES deciphering, please verify the key ("+str(e.args[0])+")")
         print("[-] Aborting ...")
