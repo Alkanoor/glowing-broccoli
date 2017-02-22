@@ -1,31 +1,34 @@
 PULL_DIR=.
-PUSH_DIR=../toPushIn/files
+PUSH_DIR=../remote/files
 KEY=../aes-operations/key
 
 init:
-	make -C ../toPushIn init
+	make -C ../remote init
 
-init-existing:
-	make -C ../toPushIn init-existing
+init-existing-linux:
+	make -C ../remote init-existing-linux
+
+init-existing-windows:
+	make -C ../remote init-existing-windows
 
 push-no-check:
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR) $(KEY)
-	make -C ../toPushIn push
+	make -C ../remote push
 
 push:
-	make -C ../toPushIn pull
+	make -C ../remote pull
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR) $(KEY)
-	make -C ../toPushIn push
+	make -C ../remote push
 
 push-no-check-delete-useless:
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR) $(KEY) 1
-	make -C ../toPushIn push
+	make -C ../remote push
 
 push-delete-useless:
-	make -C ../toPushIn pull
+	make -C ../remote pull
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR) $(KEY) 1
-	make -C ../toPushIn push
+	make -C ../remote push
 
 pull:
-	make -C ../toPushIn pull
+	make -C ../remote pull
 	python ../aes-operations/pullScript.py $(PUSH_DIR) $(KEY)
