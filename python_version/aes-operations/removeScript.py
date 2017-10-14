@@ -22,10 +22,14 @@ src = sys.argv[1]
 dst = os.getcwd()
 key = craft_key(sys.argv[2])
 if len(sys.argv)>=4:
-    tmp_dst = sys.argv[3]
+    tmp_dst = dst+"/"+sys.argv[3]
 else:
-    tmp_dst = '../tmp'
-os.rename(dst, tmp_dst)
+    tmp_dst = dst+'/../tmp'
+
+try:
+    os.rename(dst, tmp_dst)
+except:
+    os.system("mv "+dst+" "+tmp_dst)
 
 files = list_target_files(src,key)
 
