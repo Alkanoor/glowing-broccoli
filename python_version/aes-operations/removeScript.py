@@ -30,6 +30,8 @@ try:
     os.rename(dst, tmp_dst)
 except:
     os.system("mv "+dst+" "+tmp_dst)
+os.makedirs(dst)
+os.chdir(dst)
 
 files = list_target_files(src,key)
 
@@ -91,3 +93,13 @@ for target,last_modif_target,ciphered,last_modif_in_ciphered in files:
             print("[-] Error during file replacement of "+target+" : "+str(e.args[0]))
             print("[-] Aborting ...")
             exit()
+
+
+print("[+] All files has been copied successfully, do you want to remove temp directory (which still contains local files that are not yet remote) ? [N/y]")
+i = raw_input()
+if i=='y':
+    import shutil
+    shutil.rmtree(tmp_dst)
+    print("[.] Tmp dir removed")
+else:
+    print("[.] Tmp dir not removed")
