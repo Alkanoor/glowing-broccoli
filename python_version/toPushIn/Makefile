@@ -1,9 +1,12 @@
 REPO=https://github.com/Alkanoor/removeDirectly.git
 
-init:
-	echo "Makefile">>.gitignore
+
+config:
 	git config --global user.email "Alkanoor@github.com"
-	git config --global user.name "Alkanor"
+	git config --global user.name "Alkanoor"
+
+init: config
+	echo "Makefile">>.gitignore
 	git init
 	git stage --all
 	git commit -m "first commit"
@@ -21,10 +24,9 @@ init-existing-windows:
 
 push:
 	git stage --all
-	git commit -m "répétition"
+	git commit -m "Repetition"
 	git push
 
 pull:
 	git stash
 	git pull origin master
-

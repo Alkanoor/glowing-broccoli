@@ -16,6 +16,9 @@ init-existing-linux:
 init-existing-windows:
 	make -C $(PUSH_DIR) init-existing-windows
 
+status:
+	python ../aes-operations/statusScript.py $(PULL_DIR) $(PUSH_DIR_FILES) $(KEY)
+
 push-no-check:
 	python ../aes-operations/pushScript.py $(PULL_DIR) $(PUSH_DIR_FILES) $(KEY)
 	make -C $(PUSH_DIR) push
